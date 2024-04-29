@@ -1,7 +1,7 @@
 import React, { forwardRef, useState } from "react";
 import { InputWrapper } from "./Input.styles";
 
-interface InputProps {
+export interface InputProps {
   value: string;
   onChange: (value: string) => void;
   onValidate?: (isValid: boolean) => void;
@@ -13,6 +13,7 @@ interface InputProps {
   onBlur?: () => void;
   onFocus?: () => void;
   type?: string;
+  isFocused?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -29,6 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       onFocus,
       type,
+      isFocused,
     },
     ref
   ) => {
@@ -52,7 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <InputWrapper size={size} isValid={isValid}>
+      <InputWrapper size={size} isValid={isValid} isFocused={isFocused}>
         <input
           ref={ref}
           value={value}

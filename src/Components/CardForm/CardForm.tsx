@@ -191,9 +191,8 @@ const CardForm: React.FC = () => {
             setCompleted={handleCardNumberCompleted}
           />
         </CardInput>
-
-        {isAllCompleted && <Button onClick={handleOnClick}>확인</Button>}
       </form>
+      {isAllCompleted && <Button onClick={handleOnClick}>확인</Button>}
     </CardFormWrapper>
   );
 };
