@@ -22,7 +22,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ onSelect, setCompleted }) => {
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value as CardCompany;
+    const value = event.target.value as CardCompany | "";
     setSelectedValue(value);
     onSelect(value);
   };
