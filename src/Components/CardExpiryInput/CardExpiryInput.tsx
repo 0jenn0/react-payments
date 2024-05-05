@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ExpiryInputWrapper } from "./CardExpiryInput.styles";
-import Input from "../common/Input/Input";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
+import Input from "../common/Input/Input";
+import { ExpiryInputWrapper } from "./CardExpiryInput.styles";
 
 interface CardExpiryInputProps {
   month: string;
   year: string;
   onMonthChange: (value: string) => void;
   onYearChange: (value: string) => void;
-  setExpiryMonthCompleted: (isCompletd: boolean) => void;
-  setExpiryYearCompleted: (isCompletd: boolean) => void;
+  setExpiryMonthCompleted: (isCompleted: boolean) => void;
+  setExpiryYearCompleted: (isCompleted: boolean) => void;
 }
 
 const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
