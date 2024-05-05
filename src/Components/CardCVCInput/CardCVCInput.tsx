@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Input from "../common/Input/Input";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
+import Input from "../common/Input/Input";
 
 interface CardCVCInputProps {
   value: string;
@@ -18,58 +18,44 @@ const CardCVCInput: React.FC<CardCVCInputProps> = ({
   handleOnFocus,
 }) => {
   const [inputValues, setInputValues] = useState("");
-  const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (inputValue: string) => {
     setInputValues(inputValue);
     onChange(inputValue);
-  };
-
-  const handleValidate = (isValid: boolean) => {
-    setIsValid(isValid);
+    validator(inputValue);
   };
 
   const validator = (value: string) => {
     if (!/^\d*$/.test(value)) {
-      setIsValid(false);
       setErrorMessage("CVC 번호는 숫자만 입력 가능합니다.");
-      return false;
+      return;
     }
 
     if (value.length !== 3) {
-      setIsValid(false);
       setErrorMessage("CVC 번호는 3자리여야 합니다.");
-      return false;
+      return;
     }
 
-    setIsValid(true);
     setErrorMessage("");
-    return true;
   };
 
   useEffect(() => {
-    if (inputValues && isValid) {
-      setCompleted(true);
-    } else {
-      setCompleted(false);
-    }
-  }, [inputValues, isValid]);
+    setCompleted(inputValues.length === 3 && !errorMessage);
+  }, [inputValues, errorMessage]);
 
   return (
     <>
       <Input
         value={inputValues}
-        onChange={(inputValue) => handleChange(inputValue)}
-        onValidate={(isValid) => handleValidate(isValid)}
+        onChange={handleChange}
         placeholder="123"
         size="large"
         maxLength={3}
-        validator={(value) => validator(value)}
         onBlur={handleOnBlur}
         onFocus={handleOnFocus}
       />
-      <Tooltip>{!isValid ? errorMessage : ""}</Tooltip>
+      <Tooltip>{errorMessage}</Tooltip>
     </>
   );
 };
