@@ -28,8 +28,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ onSelect, setCompleted }) => {
   };
 
   useEffect(() => {
-    const isCompleted = selectedValue !== "";
-    setCompleted(isCompleted);
+    setCompleted(selectedValue !== "");
   }, [selectedValue]);
 
   return (
