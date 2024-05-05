@@ -1,24 +1,24 @@
 /** @jsxImportSource @emotion/react */
 
-import React from "react";
-import CardPreview from "../CardPreview/CardPreview";
+import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import useCardCVCInput from "../../hooks/useCardCVCInput";
+import useCardCompanySelect from "../../hooks/useCardCompanySelect";
+import useCardNumberInput from "../../hooks/useCardNumberInput";
+import useCardOwnerNameInput from "../../hooks/useCardOwnerNameInput";
+import useCardPasswordInput from "../../hooks/useCardPasswordInput";
+import useExpiryInput from "../../hooks/useExpiryInput";
+import useInputVisibility from "../../hooks/useInputVisibility";
+import CardCVCInput from "../CardCVCInput/CardCVCInput";
+import SelectBox from "../CardCompanySelector/CardCompanySelector";
+import CardExpiryInput from "../CardExpiryInput/CardExpiryInput";
 import CardInput from "../CardInput/CardInput";
 import CardNumberInput from "../CardNumberInput/CardNumberInput";
-import CardExpiryInput from "../CardExpiryInput/CardExpiryInput";
 import CardOwnerNameInput from "../CardOwnerNameInput/CardOwnerNameInput";
-import SelectBox from "../CardCompanySelector/CardCompanySelector";
-import CardCVCInput from "../CardCVCInput/CardCVCInput";
-import Button from "../common/Button/Button";
-import { useNavigate } from "react-router-dom";
 import CardPasswordInput from "../CardPasswordInput/CardPasswordInput";
+import CardPreview from "../CardPreview/CardPreview";
+import Button from "../common/Button/Button";
 import { CardFormWrapper, FormStyle } from "./CardForm.style";
-import useCardNumberInput from "../../hooks/useCardNumberInput";
-import useCardCompanySelect from "../../hooks/useCardCompanySelect";
-import useExpiryInput from "../../hooks/useExpiryInput";
-import useCardOwnerNameInput from "../../hooks/useCardOwnerNameInput";
-import useCardCVCInput from "../../hooks/useCardCVCInput";
-import useCardPasswordInput from "../../hooks/useCardPasswordInput";
-import useInputVisibility from "../../hooks/useInputVisibility";
 
 const CardForm: React.FC = () => {
   const {
@@ -82,13 +82,23 @@ const CardForm: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const isAllCompleted =
-    isCardCVCCompleted &&
-    isCardholderNameCompleted &&
-    isExpiryYearCompleted &&
-    isSelectedCardCompleted &&
-    isCardNumberCompleted &&
-    isCardPasswordCompleted;
+  const isAllCompleted = useMemo(() => {
+    return (
+      isCardCVCCompleted &&
+      isCardholderNameCompleted &&
+      isExpiryYearCompleted &&
+      isSelectedCardCompleted &&
+      isCardNumberCompleted &&
+      isCardPasswordCompleted
+    );
+  }, [
+    isCardCVCCompleted,
+    isCardholderNameCompleted,
+    isExpiryYearCompleted,
+    isSelectedCardCompleted,
+    isCardNumberCompleted,
+    isCardPasswordCompleted,
+  ]);
 
   const handleOnClick = () => {
     navigate("/enrollmentCompleted", {
