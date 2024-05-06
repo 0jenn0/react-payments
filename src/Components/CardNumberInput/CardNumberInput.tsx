@@ -37,7 +37,8 @@ const CardNumberInput: React.FC<CardNumberInputProps> = ({
   };
 
   const validator = (value: string) => {
-    if (!/^\d*$/.test(value)) {
+    const isNumericRegex = /^\d*$/;
+    if (!isNumericRegex.test(value)) {
       setErrorMessage("카드 번호는 숫자만 입력 가능합니다.");
       return false;
     }

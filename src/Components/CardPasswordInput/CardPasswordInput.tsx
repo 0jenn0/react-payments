@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Input from "../common/Input/Input";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
+import Input from "../common/Input/Input";
 
 interface CardPasswordInputProps {
   value: string;
@@ -26,7 +26,8 @@ const CardPasswordInput: React.FC<CardPasswordInputProps> = ({
   };
 
   const validator = (value: string) => {
-    if (!/^\d*$/.test(value)) {
+    const isNumericRegex = /^\d*$/;
+    if (!isNumericRegex.test(value)) {
       setIsValid(false);
       setErrorMessage("비밀번호는 숫자만 입력 가능합니다.");
       return false;

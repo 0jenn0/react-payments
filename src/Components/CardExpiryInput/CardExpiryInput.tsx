@@ -29,7 +29,7 @@ const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
   const handleMonthChange = (inputValue: string) => {
     onMonthChange(inputValue);
 
-    if (inputValue.length === 2) {
+    if (isMonthValid && inputValue.length === 2) {
       yearRef.current?.focus();
     }
   };
@@ -39,7 +39,8 @@ const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
   };
 
   const monthValidator = (value: string) => {
-    if (!/^\d*$/.test(value)) {
+    const isNumericRegex = /^\d*$/;
+    if (!isNumericRegex.test(value)) {
       setIsMonthValid(false);
       setErrorMessage("유효 기간은 숫자만 입력 가능합니다.");
       return false;
@@ -93,7 +94,12 @@ const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
           ref={monthRef}
           value={month}
           onChange={(month) => handleMonthChange(month)}
-          onValidate={(isValid) => setIsMonthValid(isValid)}
+          onValidate={(isValid) => {
+            setIsMonthValid(isValid);
+            if (!isValid) {
+              monthRef.current?.focus();
+            }
+          }}
           maxLength={2}
           placeholder="MM"
           size="medium"
