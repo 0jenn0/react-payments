@@ -1,8 +1,8 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-const getCardBackgroundColor = (cardCompany: CardCompany | "") => {
-  switch (cardCompany) {
+const getCardBackgroundColor = ($cardCompany: CardCompany | "") => {
+  switch ($cardCompany) {
     case "BC카드":
       return "#F04651";
     case "신한카드":
@@ -25,7 +25,7 @@ const getCardBackgroundColor = (cardCompany: CardCompany | "") => {
 };
 
 interface CardProps {
-  cardCompany?: CardCompany | "";
+  $cardCompany?: CardCompany | "";
   children?: React.ReactNode;
 }
 
@@ -35,8 +35,8 @@ export const Card = styled.div<CardProps>`
   gap: 10px;
   width: 212px;
   height: 132px;
-  background-color: ${({ cardCompany }) =>
-    cardCompany ? getCardBackgroundColor(cardCompany) : "#D5D5D5"};
+  background-color: ${({ $cardCompany }) =>
+    $cardCompany ? getCardBackgroundColor($cardCompany) : "#D5D5D5"};
   color: #fff;
   border-radius: 4px;
   box-shadow: 3px 3px 5px 0px #00000040;
@@ -120,8 +120,8 @@ export const CardFront = styled.div<CardProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: ${({ cardCompany }) =>
-    cardCompany ? getCardBackgroundColor(cardCompany) : "#333"};
+  background-color: ${({ $cardCompany }) =>
+    $cardCompany ? getCardBackgroundColor($cardCompany) : "#333"};
   color: #fff;
   border-radius: 4px;
   box-shadow: 3px 3px 5px 0px #00000040;
