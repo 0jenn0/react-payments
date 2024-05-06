@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-export const mainStyle = css({
+export const Layout = css({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",

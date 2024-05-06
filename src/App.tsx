@@ -1,13 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import { mainStyle } from "./App.styles";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Layout } from "./App.styles";
 import CardEnrollmentCompleteView from "./components/CardEnrollmentCompleteView/CardEnrollmentCompleteView";
 import CardForm from "./components/CardForm/CardForm";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <Router>
-      <main css={mainStyle}>
+      <main css={Layout}>
         <Routes>
           <Route path="/" element={<CardForm />} />
           <Route
