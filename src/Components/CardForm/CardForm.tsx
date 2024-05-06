@@ -150,6 +150,7 @@ const CardForm: React.FC = () => {
         {showCardOwnerNameInput && (
           <CardInput
             title="카드 소유자 이름을 입력해 주세요"
+            description="이름 입력 후 ENTER를 눌러주세요"
             label="카드 소유자 이름"
           >
             <CardOwnerNameInput
