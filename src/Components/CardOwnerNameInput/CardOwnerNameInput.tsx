@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Input from "../common/Input/Input";
+import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
+import Input from "../common/Input/Input";
 
 interface CardOwnerNameInputProps {
   value: string;
@@ -13,33 +13,31 @@ const CardOwnerNameInput: React.FC<CardOwnerNameInputProps> = ({
   onChange,
   setCompleted,
 }) => {
-  const [isValid, setIsValid] = useState(true);
+  const [inputValues, setInputValues] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (inputValue: string) => {
-    if (validator(inputValue)) {
-      onChange(inputValue.toUpperCase());
-    }
+    setInputValues(inputValue);
+    onChange(inputValue.toUpperCase());
   };
 
-  const handleValidate = (isValid: boolean) => {
-    setIsValid(isValid);
-  };
-
-  const validator = (value: string) => {
-    if (!/^[A-Za-z\s]*$/.test(value)) {
-      setIsValid(false);
+  const isValid = useMemo(() => {
+    const isEnglishRegex = /^[A-Za-z\s]*$/;
+    if (!isEnglishRegex.test(inputValues)) {
       setErrorMessage("카드 소유자 이름은 영어로만 입력해 주세요");
       return false;
     }
 
-    setIsValid(true);
     setErrorMessage("");
     return true;
-  };
+  }, [inputValues]);
+
+  useEffect(() => {
+    setCompleted(isValid && inputValues.trim() !== "");
+  }, [isValid, inputValues]);
 
   const handleEnter = () => {
-    if (value && isValid) {
+    if (isValid && inputValues.trim() !== "") {
       setCompleted(true);
     } else {
       setCompleted(false);
@@ -49,12 +47,10 @@ const CardOwnerNameInput: React.FC<CardOwnerNameInputProps> = ({
   return (
     <>
       <Input
-        value={value}
+        value={inputValues}
         onChange={(inputValue) => handleChange(inputValue)}
-        onValidate={(isValid) => handleValidate(isValid)}
         placeholder="JOHN DOE"
         size="large"
-        validator={(value) => validator(value)}
         onEnter={handleEnter}
       />
       <Tooltip>{!isValid ? errorMessage : ""}</Tooltip>
