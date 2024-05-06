@@ -50,7 +50,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({
 
   return (
     <CardWrapper className={!isFrontValue ? "front" : "back"}>
-      <CardFront cardCompany={cardCompany}>
+      <CardFront $cardCompany={cardCompany}>
         <div css={logoDiv}>
           <CardLogo option="default" />
           <CardLogo option={option} />
