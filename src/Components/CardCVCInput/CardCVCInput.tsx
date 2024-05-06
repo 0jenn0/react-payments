@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
 import Input from "../common/Input/Input";
 
@@ -23,40 +23,40 @@ const CardCVCInput: React.FC<CardCVCInputProps> = ({
   const handleChange = (inputValue: string) => {
     setInputValues(inputValue);
     onChange(inputValue);
-    validator(inputValue);
   };
 
-  const validator = (value: string) => {
+  const isValid = useMemo(() => {
     const isNumericRegex = /^\d*$/;
-    if (!isNumericRegex.test(value)) {
+    if (!isNumericRegex.test(inputValues)) {
       setErrorMessage("CVC 번호는 숫자만 입력 가능합니다.");
-      return;
+      return false;
     }
 
-    if (value.length !== 3) {
+    if (inputValues.length !== 3) {
       setErrorMessage("CVC 번호는 3자리여야 합니다.");
-      return;
+      return false;
     }
 
     setErrorMessage("");
-  };
+    return true;
+  }, [inputValues]);
 
   useEffect(() => {
-    setCompleted(inputValues.length === 3 && !errorMessage);
-  }, [inputValues, errorMessage]);
+    setCompleted(isValid);
+  }, [isValid]);
 
   return (
     <>
       <Input
         value={inputValues}
-        onChange={handleChange}
+        onChange={(inputValue) => handleChange(inputValue)}
         placeholder="123"
         size="large"
         maxLength={3}
         onBlur={handleOnBlur}
         onFocus={handleOnFocus}
       />
-      <Tooltip>{errorMessage}</Tooltip>
+      <Tooltip>{!isValid ? errorMessage : ""}</Tooltip>
     </>
   );
 };
