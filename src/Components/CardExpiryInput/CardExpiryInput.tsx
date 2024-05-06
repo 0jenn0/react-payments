@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
 import Input from "../common/Input/Input";
 import { ExpiryInputWrapper } from "./CardExpiryInput.styles";
@@ -20,72 +20,65 @@ const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
   setExpiryMonthCompleted,
   setExpiryYearCompleted,
 }) => {
-  const [isMonthValid, setIsMonthValid] = useState(true);
-  const [isYearValid, setIsYearValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const monthRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
 
   const handleMonthChange = (inputValue: string) => {
     onMonthChange(inputValue);
-
-    if (isMonthValid && inputValue.length === 2) {
-      yearRef.current?.focus();
-    }
   };
 
   const handleYearChange = (inputValue: string) => {
     onYearChange(inputValue);
   };
 
-  const monthValidator = (value: string) => {
+  const isMonthValid = useMemo(() => {
     const isNumericRegex = /^\d*$/;
-    if (!isNumericRegex.test(value)) {
-      setIsMonthValid(false);
+    if (!isNumericRegex.test(month)) {
       setErrorMessage("유효 기간은 숫자만 입력 가능합니다.");
       return false;
     }
 
-    if (Number(value) > 12) {
-      setIsMonthValid(false);
+    if (Number(month) > 12) {
       setErrorMessage("달은 12까지만 가능합니다.");
       return false;
     }
 
-    setIsMonthValid(true);
     setErrorMessage("");
     return true;
-  };
+  }, [month]);
 
-  const yearValidator = (value: string) => {
+  const isYearValid = useMemo(() => {
     const currentYear = Number(new Date().getFullYear().toString().slice(2));
 
-    if (!/^\d*$/.test(value)) {
-      setIsYearValid(false);
+    const isNumericRegex = /^\d*$/;
+    if (!isNumericRegex.test(year)) {
       setErrorMessage("유효 기간은 숫자만 입력 가능합니다.");
       return false;
     }
 
-    if (Number(value) < currentYear) {
-      setIsYearValid(false);
+    if (Number(year) < currentYear) {
       setErrorMessage(`${currentYear}년 이후만 가능합니다.`);
       return false;
     }
 
-    setIsYearValid(true);
     setErrorMessage("");
     return true;
-  };
+  }, [year]);
 
   useEffect(() => {
-    if (isMonthValid && isYearValid && month && year) {
-      setExpiryMonthCompleted(true);
-      setExpiryYearCompleted(true);
-    } else {
-      setExpiryMonthCompleted(false);
-      setExpiryYearCompleted(false);
+    if (isMonthValid && month.length === 2) {
+      yearRef.current?.focus();
     }
-  }, [isMonthValid, isYearValid, month, year]);
+  }, [isMonthValid, month]);
+
+  useEffect(() => {
+    setExpiryMonthCompleted(isMonthValid);
+  }, [isMonthValid]);
+
+  useEffect(() => {
+    setExpiryYearCompleted(isYearValid);
+  }, [isYearValid]);
 
   return (
     <>
@@ -94,26 +87,17 @@ const CardExpiryInput: React.FC<CardExpiryInputProps> = ({
           ref={monthRef}
           value={month}
           onChange={(month) => handleMonthChange(month)}
-          onValidate={(isValid) => {
-            setIsMonthValid(isValid);
-            if (!isValid) {
-              monthRef.current?.focus();
-            }
-          }}
           maxLength={2}
           placeholder="MM"
           size="medium"
-          validator={(value) => monthValidator(value)}
         />
         <Input
           ref={yearRef}
           value={year}
           onChange={(year) => handleYearChange(year)}
-          onValidate={(isValid) => setIsYearValid(isValid)}
           maxLength={2}
           placeholder="YY"
           size="medium"
-          validator={(value) => yearValidator(value)}
         />
       </ExpiryInputWrapper>
       <Tooltip>{!isMonthValid || !isYearValid ? errorMessage : ""}</Tooltip>
