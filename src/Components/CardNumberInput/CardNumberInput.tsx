@@ -1,64 +1,85 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "../common/Input/Input";
+import {
+  CardNumberInputWrapper,
+  InputGroup,
+  Tooltip,
+} from "./CardNumberInput.styles";
 
-interface CardCVCInputProps {
+interface CardNumberInputProps {
   value: string;
   onChange: (value: string) => void;
-  setCompleted: (isCompleted: boolean) => void;
-  handleOnBlur: () => void;
-  handleOnFocus: () => void;
+  setCompleted: (isValid: boolean) => void;
 }
 
-const CardCVCInput: React.FC<CardCVCInputProps> = ({
+const CardNumberInput: React.FC<CardNumberInputProps> = ({
   value,
   onChange,
   setCompleted,
-  handleOnBlur,
-  handleOnFocus,
 }) => {
-  const [inputValues, setInputValues] = useState("");
+  const [inputValues, setInputValues] = useState<string[]>(Array(4).fill(""));
+  const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleChange = (inputValue: string) => {
-    setInputValues(inputValue);
-    onChange(inputValue);
+  const handleChange = (index: number, inputValue: string) => {
+    const newInputValues = [...inputValues];
+    newInputValues[index] = inputValue;
+    setInputValues(newInputValues);
+    onChange(newInputValues.join(" "));
+
+    if (inputValue.length === 4 && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
   };
 
-  const isValid = useMemo(() => {
+  const handleValidate = (index: number, isValid: boolean) => {
+    setIsValid(isValid);
+  };
+
+  const validator = (value: string) => {
     const isNumericRegex = /^\d*$/;
-    if (!isNumericRegex.test(inputValues)) {
-      setErrorMessage("CVC 번호는 숫자만 입력 가능합니다.");
+    if (!isNumericRegex.test(value)) {
+      setErrorMessage("카드 번호는 숫자만 입력 가능합니다.");
       return false;
     }
 
-    if (inputValues.length !== 3) {
-      setErrorMessage("CVC 번호는 3자리여야 합니다.");
+    if (value.length !== 4) {
+      setErrorMessage("카드 번호는 4자리여야 합니다.");
       return false;
     }
 
     setErrorMessage("");
     return true;
-  }, [inputValues]);
+  };
 
   useEffect(() => {
-    setCompleted(isValid);
-  }, [isValid]);
+    const isCompleted = inputValues.join("").length === 16 && isValid;
+    setCompleted(isCompleted);
+  }, [inputValues, isValid]);
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(4).fill(null));
 
   return (
-    <>
-      <Input
-        value={inputValues}
-        onChange={(inputValue) => handleChange(inputValue)}
-        placeholder="123"
-        size="large"
-        maxLength={3}
-        onBlur={handleOnBlur}
-        onFocus={handleOnFocus}
-      />
+    <CardNumberInputWrapper>
+      <InputGroup>
+        {[0, 1, 2, 3].map((index) => (
+          <div key={index}>
+            <Input
+              ref={(el) => (inputRefs.current[index] = el)}
+              value={inputValues[index]}
+              onChange={(inputValue) => handleChange(index, inputValue)}
+              onValidate={(isValid) => handleValidate(index, isValid)}
+              maxLength={4}
+              size="small"
+              validator={(value) => validator(value)}
+            />
+          </div>
+        ))}
+      </InputGroup>
+
       <Tooltip>{!isValid ? errorMessage : ""}</Tooltip>
-    </>
+    </CardNumberInputWrapper>
   );
 };
 
-export default CardCVCInput;
+export default CardNumberInput;
