@@ -1,14 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { useMemo } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import useCardCVCInput from "../../hooks/useCardCVCInput";
-import useCardCompanySelect from "../../hooks/useCardCompanySelect";
-import useCardNumberInput from "../../hooks/useCardNumberInput";
-import useCardOwnerNameInput from "../../hooks/useCardOwnerNameInput";
-import useCardPasswordInput from "../../hooks/useCardPasswordInput";
-import useExpiryInput from "../../hooks/useExpiryInput";
-import useInputVisibility from "../../hooks/useInputVisibility";
+import useCardForm from "../../hooks/useCardForm";
 import CardCVCInput from "../CardCVCInput/CardCVCInput";
 import SelectBox from "../CardCompanySelector/CardCompanySelector";
 import CardExpiryInput from "../CardExpiryInput/CardExpiryInput";
@@ -23,82 +17,38 @@ import { CardFormWrapper, FormStyle } from "./CardForm.style";
 const CardForm: React.FC = () => {
   const {
     cardNumber,
-    isCardNumberCompleted,
-    handleCardNumberChange,
-    handleCardNumberCompleted,
-  } = useCardNumberInput();
-
-  const {
     selectedCard,
-    isSelectedCardCompleted,
-    handleSelect,
-    handleSelectedCardCompleted,
-  } = useCardCompanySelect();
-
-  const {
     expiryMonth,
     expiryYear,
-    isExpiryMonthCompleted,
-    isExpiryYearCompleted,
-    handleExpiryMonthChange,
-    handleExpiryYearChange,
-    handleExpiryMonthCompleted,
-    handleExpiryYearCompleted,
-  } = useExpiryInput();
-
-  const {
     cardholderName,
-    isCardholderNameCompleted,
-    handleCardholderNameChange,
-    handleCardholderNameCompleted,
-  } = useCardOwnerNameInput();
-
-  const { cardCVC, isCardCVCCompleted, handleCardCVC, handleCardCVCCompleted } =
-    useCardCVCInput();
-
-  const {
+    cardCVC,
     cardPassword,
-    isCardPasswordCompleted,
-    handleCardPasswordChange,
-    handleCardPasswordCompleted,
-  } = useCardPasswordInput();
-
-  const {
+    isAllCompleted,
     showSelectBox,
     showExpiryInput,
     showCardOwnerNameInput,
     showCardCVCInput,
     showCardPasswordInput,
     isOnCVCInput,
+    handleCardNumberChange,
+    handleCardNumberCompleted,
+    handleSelect,
+    handleSelectedCardCompleted,
+    handleExpiryMonthChange,
+    handleExpiryYearChange,
+    handleExpiryMonthCompleted,
+    handleExpiryYearCompleted,
+    handleCardholderNameChange,
+    handleCardholderNameCompleted,
+    handleCardCVC,
+    handleCardCVCCompleted,
+    handleCardPasswordChange,
+    handleCardPasswordCompleted,
     handleCVCFocus,
     handleCVCBlur,
-  } = useInputVisibility({
-    isCardNumberCompleted,
-    isSelectedCardCompleted,
-    isExpiryCompleted: isExpiryMonthCompleted && isExpiryYearCompleted,
-    isCardholderNameCompleted,
-    isCardCVCCompleted,
-  });
+  } = useCardForm();
 
   const navigate = useNavigate();
-
-  const isAllCompleted = useMemo(() => {
-    return (
-      isCardCVCCompleted &&
-      isCardholderNameCompleted &&
-      isExpiryYearCompleted &&
-      isSelectedCardCompleted &&
-      isCardNumberCompleted &&
-      isCardPasswordCompleted
-    );
-  }, [
-    isCardCVCCompleted,
-    isCardholderNameCompleted,
-    isExpiryYearCompleted,
-    isSelectedCardCompleted,
-    isCardNumberCompleted,
-    isCardPasswordCompleted,
-  ]);
 
   const handleOnClick = () => {
     navigate("/enrollmentCompleted", {
