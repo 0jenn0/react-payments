@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "../CardNumberInput/CardNumberInput.styles";
 import Input from "../common/Input/Input";
 
@@ -14,54 +14,41 @@ const CardPasswordInput: React.FC<CardPasswordInputProps> = ({
   setCompleted,
 }) => {
   const [inputValues, setInputValues] = useState("");
-  const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (inputValue: string) => {
     setInputValues(inputValue);
+    onChange(inputValue);
   };
 
-  const handleValidate = (isValid: boolean) => {
-    setIsValid(isValid);
-  };
-
-  const validator = (value: string) => {
+  const isValid = useMemo(() => {
     const isNumericRegex = /^\d*$/;
-    if (!isNumericRegex.test(value)) {
-      setIsValid(false);
+    if (!isNumericRegex.test(inputValues)) {
       setErrorMessage("비밀번호는 숫자만 입력 가능합니다.");
       return false;
     }
 
-    if (value.length !== 2) {
-      setIsValid(false);
+    if (inputValues.length !== 2) {
       setErrorMessage("비밀번호 2자리를 입력해 주세요.");
       return false;
     }
 
-    setIsValid(true);
     setErrorMessage("");
     return true;
-  };
+  }, [inputValues]);
 
   useEffect(() => {
-    if (inputValues && isValid) {
-      setCompleted(true);
-    } else {
-      setCompleted(false);
-    }
-  }, [inputValues, isValid]);
+    setCompleted(isValid);
+  }, [isValid]);
 
   return (
     <>
       <Input
         value={inputValues}
         onChange={(inputValue) => handleChange(inputValue)}
-        onValidate={(isValid) => handleValidate(isValid)}
         placeholder="**"
         size="large"
         maxLength={2}
-        validator={(value) => validator(value)}
         type="password"
       />
       <Tooltip>{!isValid ? errorMessage : ""}</Tooltip>
