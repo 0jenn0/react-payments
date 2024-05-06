@@ -56,7 +56,7 @@ const CardNumberInput: React.FC<CardNumberInputProps> = ({
     setCompleted(isCompleted);
   }, [inputValues, isValid]);
 
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(4).fill(null));
 
   return (
     <CardNumberInputWrapper>
